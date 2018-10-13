@@ -1,0 +1,19 @@
+Lock Free Sensor System
+
+
+a) Done
+
+b) Done
+
+
+Questions;
+a) Yes it is wait free, because if the thread cant change the data/somebody was faster he gives up.
+
+b) I don't think it is possible to use the same method for graphs
+
+
+Linearizability and Sequential Consistency
+a)possible
+b) not possible
+c) possible
+d) not possible

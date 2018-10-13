@@ -1,0 +1,102 @@
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+public class RepetitionTest {
+
+	@Test // 0.5
+	public void testNull() throws Exception {
+		RuntimeException thrown = null;
+		try {
+			Repetition.consistsOf(null, asList(1));
+		} catch (RuntimeException e) {
+			thrown = e;
+		}
+		assertNotNull(thrown);
+		assertEquals("invalid lists", thrown.getMessage().toLowerCase());
+
+		thrown = null;
+		try {
+			Repetition.consistsOf(null, emptyList());
+		} catch (RuntimeException e) {
+			thrown = e;
+		}
+		assertNotNull(thrown);
+		assertEquals("invalid lists", thrown.getMessage().toLowerCase());
+
+		thrown = null;
+		try {
+			Repetition.consistsOf(asList(1), null);
+		} catch (RuntimeException e) {
+			thrown = e;
+		}
+		assertNotNull(thrown);
+		assertEquals("invalid lists", thrown.getMessage().toLowerCase());
+
+		thrown = null;
+		try {
+			Repetition.consistsOf(emptyList(), null);
+		} catch (RuntimeException e) {
+			thrown = e;
+		}
+		assertNotNull(thrown);
+		assertEquals("invalid lists", thrown.getMessage().toLowerCase());
+	}
+
+	@Test // 0.5
+	public void testEmpty() throws Exception {
+		RuntimeException thrown = null;
+		try {
+			Repetition.consistsOf(asList(1), emptyList());
+		} catch (RuntimeException e) {
+			thrown = e;
+		}
+		assertNotNull(thrown);
+		assertEquals("invalid lists", thrown.getMessage().toLowerCase());
+
+		thrown = null;
+		try {
+			Repetition.consistsOf(emptyList(), asList(1));
+		} catch (RuntimeException e) {
+			thrown = e;
+		}
+		assertNotNull(thrown);
+		assertEquals("invalid lists", thrown.getMessage().toLowerCase());
+	}
+
+	@Test // 1
+	public void testSimple() throws Exception {
+		// next line commented bc. task was unclearly formulated
+		// assertTrue(Repetition.consistsOf(asList(1), asList(1)));
+		assertTrue(Repetition.consistsOf(asList(1, 1), asList(1)));
+		assertFalse(Repetition.consistsOf(asList(2), asList(1)));
+		assertFalse(Repetition.consistsOf(asList(1, 2), asList(1)));
+	}
+
+	@Test // 2
+	public void testMultipleReps() throws Exception {
+		// assertTrue(Repetition.consistsOf(asList(1, 2), asList(1, 2)));
+		assertTrue(Repetition.consistsOf(asList(1, 2, 1, 2), asList(1, 2)));
+		assertFalse(Repetition.consistsOf(asList(1), asList(1, 2)));
+		assertFalse(Repetition.consistsOf(asList(1, 2, 1), asList(1, 2)));
+		assertFalse(Repetition.consistsOf(asList(1, 2, 1, 3), asList(1, 2)));
+
+		assertFalse(Repetition.consistsOf(asList(1, 2, 0), asList(1, 2)));
+		assertFalse(Repetition.consistsOf(asList(1, 2, 2, 1), asList(1, 2)));
+		assertFalse(Repetition.consistsOf(asList(0, 1, 2), asList(1, 2)));
+		assertFalse(Repetition.consistsOf(asList(1, 0, 2), asList(1, 2)));
+		assertFalse(Repetition.consistsOf(asList(1, 1, 0), asList(1)));
+		assertTrue(Repetition.consistsOf(asList(1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3), asList(1, 2, 3)));
+	}
+
+	@Test // 1
+	public void testDifferentInstances() throws Exception {
+		assertTrue(Repetition.consistsOf(asList(1, 2, 1, 2), asList(new Integer(1), new Integer(2))));
+		assertFalse(Repetition.consistsOf(asList(1, 2, 1, 3), asList(new Integer(1), new Integer(2))));
+	}
+}

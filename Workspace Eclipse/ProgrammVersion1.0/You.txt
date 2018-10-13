@@ -1,0 +1,14 @@
+Name: jojo
+Single: true
+Height: 0 cm
+Weight: 0 kg
+Phonenumber: null
+Eyecolor : 0,0,0
+Haircolor : 0,0,0
+Hobbys: 
+
+Advantages Of Dating Me: 
+
+Disadvantages Of Dating Me: 
+
+

@@ -1,0 +1,14 @@
+1.
+
+<xyz> <= [ X <xyz> Y | Y <xyz> X | X <xyz> ZZZ | ZZZ <xyz> X]
+
+
+2.
+<schluss> <= B
+<anfang> <= A
+<nichtC> <= A|B|<xyz>
+<xyz> <= {XY| XZ <nichtC> }
+}<abc> <= <anfang> { A | B | <xyz> |CC} <schluss>
+
+
+

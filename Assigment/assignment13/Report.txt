@@ -1,0 +1,3 @@
+Exercise 1 – Circular Buffer with STM
+
+I did with with the bounded queue from the lecture. That's why the array is one bigger than capacity.

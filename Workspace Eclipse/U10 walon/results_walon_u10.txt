@@ -1,0 +1,125 @@
+walon
+
+testHierarchy success
+testConstructors success
+testFunctionality success
+testMethods success
+testFields success
+
+ 
+ Punkte: 5 von 5
+
+
+
+
+
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+
+import java.lang.reflect.Field;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class KlassenTest {
+    
+    private Class<?> koordClass;
+    private Class<?> zweiDClass;
+    private Class<?> punktClass;
+    private Class<?> formClass;
+    private Class<?> kreisClass;
+    private Class<?> rechtClass;
+    private Class<?> quadrClass;
+    
+    @Before
+    public void getClasses() throws ClassNotFoundException {
+        koordClass = Class.forName("Koordinate");
+        zweiDClass = Class.forName("Zweidimensional");
+        punktClass = Class.forName("Punkt");
+        formClass  = Class.forName("Form");
+        kreisClass = Class.forName("Kreis");
+        rechtClass = Class.forName("Rechteck");
+        quadrClass = Class.forName("Quadrat");
+    }
+    
+    @Test
+    public void testHierarchy() throws ClassNotFoundException {
+        assertSame(Object.class, koordClass.getSuperclass());
+        assertSame(Object.class, zweiDClass.getSuperclass());
+
+        assertSame(zweiDClass, punktClass.getSuperclass());
+        assertSame(zweiDClass, formClass .getSuperclass());
+        assertSame(formClass,  kreisClass.getSuperclass());
+        assertSame(formClass,  rechtClass.getSuperclass());
+        assertSame(rechtClass, quadrClass.getSuperclass());
+    }
+    
+    @Test
+    public void testFields() throws NoSuchFieldException {
+        assertSame(int.class, koordClass.getDeclaredField("x").getType());
+        assertSame(int.class, koordClass.getDeclaredField("y").getType());
+        
+        assertSame(koordClass, zweiDClass.getDeclaredField("koordinate").getType());
+        
+        assertArrayEquals(new Field[0], punktClass.getDeclaredFields());
+        
+        assertArrayEquals(new Field[0], formClass.getDeclaredFields());
+
+        assertSame(int.class, rechtClass.getDeclaredField("breite").getType());
+        assertSame(int.class, rechtClass.getDeclaredField("hoehe").getType());
+
+        assertArrayEquals(new Field[0], quadrClass.getDeclaredFields());
+
+        assertSame(int.class, kreisClass.getDeclaredField("radius").getType());
+    }
+    
+    @Test
+    public void testConstructors() throws NoSuchMethodException {
+        koordClass.getDeclaredConstructor(int.class, int.class);
+        zweiDClass.getDeclaredConstructor(koordClass);
+        punktClass.getDeclaredConstructor(koordClass);
+        formClass .getDeclaredConstructor(koordClass);
+        kreisClass.getDeclaredConstructor(koordClass, int.class);
+        rechtClass.getDeclaredConstructor(koordClass, int.class, int.class);
+        quadrClass.getDeclaredConstructor(koordClass, int.class);
+    }
+    
+    @Test
+    public void testMethods() throws NoSuchMethodException {
+        koordClass.getDeclaredMethod("toString");
+        punktClass.getDeclaredMethod("toString");
+        kreisClass.getDeclaredMethod("toString");
+        rechtClass.getDeclaredMethod("toString");
+        quadrClass.getDeclaredMethod("toString");
+        
+        assertSame(int.class, formClass .getDeclaredMethod("flaeche").getReturnType());
+        assertSame(int.class, rechtClass.getDeclaredMethod("flaeche").getReturnType());
+        assertSame(int.class, kreisClass.getDeclaredMethod("flaeche").getReturnType());
+        
+        assertSame(int.class, rechtClass.getDeclaredMethod("diagonale").getReturnType());
+    }
+    
+    @Test
+    public void testFunctionality() throws ReflectiveOperationException {
+        Object koordinate = koordClass.getDeclaredConstructor(int.class, int.class).newInstance(1, 2);
+        Object punkt = punktClass.getDeclaredConstructor(koordClass).newInstance(koordinate);
+        Object rechteck = rechtClass.getDeclaredConstructor(koordClass, int.class, int.class).newInstance(koordinate, 10, 20);
+        Object quadrat = quadrClass.getDeclaredConstructor(koordClass, int.class).newInstance(koordinate, 42);
+        Object kreis = kreisClass.getDeclaredConstructor(koordClass, int.class).newInstance(koordinate, 55);
+        
+        assertEquals("[1, 2]", koordinate.toString());
+        assertEquals("Punkt([1, 2])", punkt.toString());
+        assertEquals("Rechteck([1, 2], 10, 20)", rechteck.toString());
+        assertEquals("Quadrat([1, 2], 42)", quadrat.toString());
+        assertEquals("Kreis([1, 2], 55)", kreis.toString());
+
+        assertEquals( 200, formClass.getDeclaredMethod("flaeche").invoke(rechteck));
+        assertEquals(1764, formClass.getDeclaredMethod("flaeche").invoke(quadrat));
+        assertEquals(9503, formClass.getDeclaredMethod("flaeche").invoke(kreis));
+
+        assertEquals(22, rechtClass.getDeclaredMethod("diagonale").invoke(rechteck));
+        assertEquals(59, rechtClass.getDeclaredMethod("diagonale").invoke(quadrat));
+    }
+}

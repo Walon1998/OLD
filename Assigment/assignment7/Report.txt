@@ -1,0 +1,28 @@
+Task 1
+There can be interleavings which cant be mapped to a sequential result:
+1. Thread1: a=GetBalance from Account A
+2. Thread2: b=GetBalance from Account A
+3. Thread2: SetBalance=b+5 from Account A
+4. Thread1: SetBalance=a+5 from Account A
+
+Task 2
+With synchronized we lock the other threads out from the bankingsystem, so only thread can do a a transaction at the time
+And we create more Overhead with Synchronized
+
+Questions 1
+I dont have to transfer money at all.
+
+Question 2
+I always take the lock of the account with the smaller id first
+
+
+
+Question 3
+Balances can change after/before we summed them up
+Thread 1: Sum+=Account1.getbalance
+Thread 1: Sum+=Account2.getbalance
+Thread 2: transfers money from account 1 to 3
+Thread1: Sum+=Account3.getbalance
+
+Question 5
+Yes, with fork and join model

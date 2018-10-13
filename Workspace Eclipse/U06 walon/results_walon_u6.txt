@@ -1,0 +1,145 @@
+walon;
+
+
+
+testL0	failed
+testL1	passed
+testL2	failed
+testL3	passed
+testRandomL4	failed
+
+Punkte: 2 von 5
+
+
+
+
+
+Bitte achtet darauf, dass ihr nur packages importiert die ihr auch tatsächlich benutzt.
+
+
+
+@Test
+public void testL0() {
+	assertEquals(0, Gipfel.findeGroessteErhebung(null));
+
+	// minimal functionality:
+	int[] hs = new int[] { 2, 1, 2, 1, 2, 3 }; // T-G-T
+	assertEquals(1, Gipfel.findeGroessteErhebung(hs));
+}
+
+@Test
+public void testL1() {
+// no Gipfel cases
+	int[] hs = new int[] {};
+	assertEquals(0, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 1 };
+	assertEquals(0, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 1, 2 };
+	assertEquals(0, Gipfel.findeGroessteErhebung(hs));
+
+	// minimal functionality:
+	hs = new int[] { 2, 1, 2, 1, 2, 3 }; // T-G-T
+	assertEquals(1, Gipfel.findeGroessteErhebung(hs));
+}
+
+@Test
+public void testL2() {
+// Gipfel, but not enough Tal
+	int[] hs = new int[] { 1, 2, 1 }; // G
+	assertEquals(0, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 2, 1, 2, 1 }; // T-G
+	assertEquals(0, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 1, 2, 1, 2 }; // G-T
+	assertEquals(0, Gipfel.findeGroessteErhebung(hs));
+
+	// simple Gipfel with two Tälern
+	hs = new int[] { 2, 1, 2, 1, 2 }; // T-G-T
+	assertEquals(1, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 2, 1, 5, 1, 2 }; // T-G-T
+	assertEquals(4, Gipfel.findeGroessteErhebung(hs));
+}
+
+@Test
+public void testL3() {
+// simple Gipfel with two Tälern (asymmetric)
+	int[] hs = new int[] { 3, 2, 5, 1, 2 }; // T-G-t
+	assertEquals(3, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 2, 1, 5, 2, 3 }; // t-G-T
+	assertEquals(3, Gipfel.findeGroessteErhebung(hs));
+
+	// multiple Gipfel and Täler
+	hs = new int[] {};
+	hs = new int[] { 2, 1, 5, 1, 5, 1, 2 }; // T-G-T-G-T
+	assertEquals(4, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 2, 1, 4, 1, 5, 1, 2 }; // T-g-T-G-T
+	assertEquals(4, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 2, 1, 5, 1, 4, 1, 2 }; // T-G-T-g-T
+	assertEquals(4, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 2, 1, 2, 4, 3, 5, 1, 2 }; // t-g-T-G-t
+	assertEquals(2, Gipfel.findeGroessteErhebung(hs));
+
+	// from testSome:
+	hs = new int[] { 2, 1, 2, 5, 3, 6, 5, 6 };
+	assertEquals(2, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 2, 1, 2, 5, 4, 3, 6, 5, 6 };
+	assertEquals(2, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 1, 7, 1, 3 };
+	assertEquals(0, Gipfel.findeGroessteErhebung(hs));
+	hs = new int[] { 4, 3, 7, 5, 2, 3 };
+	assertEquals(4, Gipfel.findeGroessteErhebung(hs));
+}
+
+private static int referenceImplementation(int[] hoehen) {
+	int linkeTalHoehe = -1;
+	int bergHoehe = -1;
+	int maxErhebung = 0;
+
+	if (hoehen == null) {
+		return 0;
+	}
+
+	for (int i = 1; i < hoehen.length - 1; i++) {
+		assert hoehen[i - 1] != hoehen[i]; // keine Plateaus
+		assert hoehen[i] != hoehen[i + 1];
+		if (hoehen[i - 1] > hoehen[i] && hoehen[i] < hoehen[i + 1]) {
+		// Talsohle
+			if (linkeTalHoehe != -1) {
+				assert bergHoehe != -1;
+				// wir haben die zweite Talsohle gefunden, berechne Erhebung
+				int minimaleErhebung = Math.min(bergHoehe - linkeTalHoehe,
+				bergHoehe - hoehen[i]);
+				maxErhebung = Math.max(maxErhebung, minimaleErhebung);
+			}
+
+			linkeTalHoehe = hoehen[i];
+		} else if (hoehen[i - 1] < hoehen[i] && hoehen[i] > hoehen[i + 1]) {
+		// Berggipfel
+			bergHoehe = hoehen[i];
+		}
+	}
+
+	return maxErhebung;
+}
+
+private static final int MAX_DIFF = 21;
+
+@Test
+public void testRandomL4() {
+// generate random height series and test against our reference implementation
+	Random r = new Random(42);
+	for (int i = 0; i < 100; i++) {
+		int size = r.nextInt(100) + 1;
+		int[] hs = new int[size];
+
+		int h = size * (MAX_DIFF / 2) + 1; // ensure that values are non-negative
+		for (int j = 0; j < size; j++) {
+			hs[j] = h;
+			int diff = r.nextInt(MAX_DIFF) - (MAX_DIFF / 2);
+			h += (diff == 0 ? 1 : diff);
+		}
+
+		int actual = Gipfel.findeGroessteErhebung(hs);
+		int expected = referenceImplementation(hs);
+		assertEquals(expected, actual);
+	}
+}

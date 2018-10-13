@@ -1,0 +1,10 @@
+Teil 1 (zeit): 2.0/2.0
+
+
+Teil 2 (palindrom): 2.0/2.0
+
+
+Teil 3 (rezept): 1.0/1.0
+
+
+Total: 5.0/5.0

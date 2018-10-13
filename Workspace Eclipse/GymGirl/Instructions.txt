@@ -1,0 +1,3 @@
+Downloade den GymGirl Ordner
+Importiere ihn in Eclipse.
+Führe die GymGirl.java Datei aus.

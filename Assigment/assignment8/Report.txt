@@ -1,0 +1,22 @@
+1.Proof by Contradiction
+a)Assume that both use the spoon at the same time. 
+For one thread to use the spoon it has to check if the spouse is not hungry.
+If it is not hungry, it can use the spoon.
+But since both are initialized hungry they can never use spoon and they can never get not hungry.
+ b) There is starvation(Deadlock) at the moment nobody can eat with the spoon.
+ Somebody has to waive.
+ We can solve it with proper locking.
+ 
+ 
+ 2.
+ a) 
+ It works because compare and set checks if the value has been changed, and only changes the value if it hasn't been changed.
+ b)
+ It takes longer because we only return if the value state hasn't changed before we want to change it again,
+ and if we have more thread the probability is higher that another threads interleaves our result.
+ To solve this we could make the whole operation atomic or lock it.
+ 
+ c)If the thing I described above can't happen, for example if we only have to increase a counter and instead
+ taking locks, we can use atomicInteger. Or the thing happens very rarely and the speedup is higher than just taking locks.
+ 
+ 

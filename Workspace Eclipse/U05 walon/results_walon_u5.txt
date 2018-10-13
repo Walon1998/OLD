@@ -1,0 +1,109 @@
+walon;
+
+
+
+testRandomSortL0	failed
+testRandomSortL1	passed
+testRandomSortL2	passed
+testRandomSortL3	passed
+testRandomSortL4	failed
+
+Punkte: 3.5 von 5
+
+
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.shuffle;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
+
+
+
+public class SortTest {
+
+	static boolean isSorted(int[] values) {
+		for (int i = 1; i < values.length; i++) {
+			if (values[i - 1] > values[i])
+				return false;
+		}
+		return true;
+	}
+	
+	@Test
+	public void testRandomSortL0() {
+		int steps = Sort.randomSort(null);
+		assertTrue("needs 0 steps", steps == 0);
+	}
+	
+	@Test
+	public void testRandomSortL1() {
+		/* test simple do-nothing cases */
+		int[] values;
+		int steps;
+		for (int i = 0; i < 100; i++) {
+			values = new int[] {};
+			steps = Sort.randomSort(values);
+			assertTrue("should be sorted", isSorted(values));
+			assertTrue("needs 0 steps", steps == 0);
+			
+			values = new int[] { 5 };
+			steps = Sort.randomSort(values);
+			assertTrue("should be sorted", isSorted(values));
+			assertTrue("needs 0 steps", steps == 0);
+		}
+	}
+    
+    @Test
+    public void testRandomSortL2() {
+        /* test sorting capability but not steps */
+        Random random = new Random(42);
+        List<Integer> list = asList(2, 3, 1, 4, 8, 4);
+        for (int i = 0; i < 1000; i++) {
+            shuffle(list, random);
+            int[] values = list.stream().mapToInt($ -> $).filter($ -> random.nextDouble() > 0.2).toArray();
+            System.out.println(Arrays.toString(values));
+            Sort.randomSort(values);
+            assertTrue("should be sorted", isSorted(values));
+        }
+    }
+    
+    @Test
+    public void testRandomSortL3() {
+        /* test sorting capability and steps somewhat */
+        int[] values;
+        int steps;
+        for (int i = 0; i < 1000; i++) {
+            values = new int[] { 2, 3, 1 };
+            steps = Sort.randomSort(values);
+            assertTrue("should be sorted", isSorted(values));
+            assertTrue("needs at least 2 steps", steps >= 2);
+            
+            values = new int[] { 3, 4, 2, 1 };
+            steps = Sort.randomSort(values);
+            assertTrue("should be sorted", isSorted(values));
+            assertTrue("needs at least 3 steps", steps >= 3);
+        }
+        
+        values = new int[] { 3, 4, 2, 1, 34, 1243, 12, 11, 23 };
+        steps = Sort.randomSort(values);
+        assertTrue("should be sorted", isSorted(values));
+        assertTrue("needs some steps", steps > 0);
+    }
+	
+	@Test
+	public void testRandomSortL4() {
+		/* test if following specification accurately */
+		int[] values;
+		int steps;
+		for (int i = 0; i < 1000; i++) {
+			values = new int[] { 5, 1 };
+			steps = Sort.randomSort(values);
+			assertTrue("should be sorted", isSorted(values));
+			assertTrue("needs exactly 1 step", steps == 1);
+		}
+	}
+}

@@ -1,0 +1,61 @@
+walon;
+
+
+testOr:			 passed
+testAnd:			 passed
+
+
+Punkte: 5 von 5
+
+
+
+
+Ein häufiger Fehler war es, die Parameter der Methode mit Variablen die mit einem Scanner eingelesen wurden zu überschreiben.
+Dies wurde als Änderung der Methode gewertet und gibt 0 Punkte.
+
+
+	@Test (timeout = 60000)
+	public void testOr(){
+		//true if either a complementary or supplementary angles was found 
+
+		//no supplementary or complementary angle
+		assertEquals( false , Winkel.passendeWinkel(108, 70 ,240));
+		assertEquals( false , Winkel.passendeWinkel(190, 110 ,85));
+		assertEquals( false , Winkel.passendeWinkel(301, 303 , 134));
+
+		//supp and comp
+		assertEquals( true , Winkel.passendeWinkel(90,0,90) );
+		assertEquals( true , Winkel.passendeWinkel(0,90,90) );
+		assertEquals( true , Winkel.passendeWinkel(163,17,73) );
+		assertEquals( true , Winkel.passendeWinkel(12,102,78) ); 
+	}
+
+	@Test (timeout = 60000)
+	public void testAnd(){
+		//true if a comp and supp angle was found
+		
+		//no supplementary or complementary angle
+		assertEquals( false , Winkel.passendeWinkel(10, 70 ,260));
+		assertEquals( false , Winkel.passendeWinkel(190, 110 ,45));
+		assertEquals( false , Winkel.passendeWinkel(1, 303 , 134));
+
+		//only supp
+		assertEquals( false, Winkel.passendeWinkel(1,9,180) ); 
+		assertEquals( false, Winkel.passendeWinkel(180,0,0) );
+		assertEquals( false, Winkel.passendeWinkel(0,0,180) ); 
+
+		//only comp
+		assertEquals( false, Winkel.passendeWinkel(78, 12 ,0))	 
+		assertEquals( false, Winkel.passendeWinkel(0,0,90) ); 
+		assertEquals( false , Winkel.passendeWinkel(90,0,0) ); 
+		assertEquals( false , Winkel.passendeWinkel(0,90,0) ); 
+
+		//comp and supp
+		assertEquals( true , Winkel.passendeWinkel(90,0,90) );
+		assertEquals( true , Winkel.passendeWinkel(0,90,90) );
+		assertEquals( true , Winkel.passendeWinkel(90,90,0) );  
+		assertEquals( true , Winkel.passendeWinkel(142,38,52) );
+		assertEquals( true , Winkel.passendeWinkel(10,170,80) ); 
+		assertEquals( true , Winkel.passendeWinkel(85,5,95) ); 
+		assertEquals( true , Winkel.passendeWinkel(163,17,73) );
+	}

@@ -1,0 +1,26 @@
+
+
+<zeit>  <= <stunden> : <minuten> : <sekunden>
+<stunden> <= ( 0 <ZeroToNine>) | (1 <ZeroToNine>) | (2 <ZeroToThree>)
+<minuten> <= <ZeroToFive> <ZeroToNine>
+<sekunden> <= <minuten>
+<ZeroToThree> <= 0|1|2|3
+<ZeroToNine> <= 0|1|2|3|4|5|6|7|8|9
+<ZeroToFive> <= 0|1|2|3|4|5
+
+
+########################################
+
+
+<palindrom> <= a | b | n | o | a <palindrom2> a | b <palindrom2> b | n <palindrom2> n | o <palindrom2> o
+<palindrom2> <=[ a | b | n | o | a <palindrom2> a | b <palindrom2> b | n <palindrom2> n | o <palindrom2> o ]
+
+
+########################################
+
+
+<rezept> <= <NotServe> serve.
+<NotServe> <= { add-<Zutat> | stir. | <increaseTemp> }
+<Zutat> <=( salt. add-pepper. )| pepper. | cream. | pasta. | egg. | water.
+<increaseTemp>  <= increase-temp. <NotServe> decrease-temp.
+

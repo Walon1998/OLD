@@ -1,0 +1,14 @@
+Dining Philosophers
+a)
+Everybody takes the fork and his/her left side and then waits until the right one is free, but everybody does this, so... -> Deadlock
+b)
+We can number the forks from 1 to 5.
+And everybody has to pick up the fork with the smaller number first, and after he/she own it, she/he can try to grab the bigger one.
+Similar to the bankaccount.
+There aren't any deadlocks because there is now order in taking locks...
+c)
+Maximum is two, since there are only 5 forks
+but minimum is 1 because for example in the beginning scenario only the person between fork 5 and 4 is able to eat,
+ since everybody else is waiting for the other fork.
+ To improve this a person could give their fork free, while they are waiting for the other fork.
+ 

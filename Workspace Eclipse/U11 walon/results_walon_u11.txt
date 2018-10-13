@@ -1,0 +1,237 @@
+walon
+
+testInsertAtSameInstanceMessage success
+testInsertAtIllegalPositionMessage failed
+testInsertNull success
+testInsertAtConsistent failed
+testInsertAt success
+testInsertAtSameInstance success
+testInsertAtIllegalPosition success
+
+ 
+ Punkte: 3.5 von 5
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class LinkedIntListTestGrading {
+
+	public LinkedIntList toList(int... elems) {
+		LinkedIntList res = new LinkedIntList();
+
+		if (elems.length == 1) {
+			res.first = res.last = new IntNode(elems[0]);
+			res.size = 1;
+		} else if (elems.length > 1) {
+			IntNode newNode = new IntNode(elems[0]);
+			res.first = newNode;
+
+			for (int i = 1; i < elems.length; i++) {
+				newNode.next = new IntNode(elems[i]);
+				newNode.next.prev = newNode;
+				newNode = newNode.next;
+			}
+			res.last = newNode;
+			res.size = elems.length;
+		}
+		assertConsistency(res);
+		return res;
+	}
+
+	public void assertConsistency(LinkedIntList list) {
+		assertEquals(list.first == null, list.last == null);
+		assertEquals(list.first == null, list.isEmpty());
+		assertEquals(list.first == null, list.size == 0);
+
+		if (!list.isEmpty()) {
+			assertTrue(list.first.prev == null);
+			assertTrue(list.last.next == null);
+		}
+
+		int count = 0;
+		for (IntNode n = list.first; n != null; n = n.next) {
+			count++;
+			if (n.next != null) {
+				assertTrue(n.next.prev == n);
+			} else {
+				assertTrue(n == list.last);
+			}
+
+			if (n.prev != null) {
+				assertTrue(n.prev.next == n);
+			} else {
+				assertTrue(n == list.first);
+			}
+		}
+
+		assertEquals(count, list.size);
+	}
+
+    @Test // 1.5
+    public void testInsertAt() throws Exception {
+        LinkedIntList list = new LinkedIntList();
+
+        list.insertAt(0, new LinkedIntList());
+        assertArrayEquals(new int[] {}, robustToArray(list));
+
+        list.insertAt(0, toList(1));
+        assertArrayEquals(new int[] { 1 }, robustToArray(list));
+
+        list.insertAt(0, new LinkedIntList());
+        assertArrayEquals(new int[] { 1 }, robustToArray(list));
+        list.insertAt(1, new LinkedIntList());
+        assertArrayEquals(new int[] { 1 }, robustToArray(list));
+
+        list.insertAt(1, toList(2, 3));
+        assertArrayEquals(new int[] { 1, 2, 3 }, robustToArray(list));
+
+        list.insertAt(0, toList(-1, 0));
+        assertArrayEquals(new int[] { -1, 0, 1, 2, 3 }, robustToArray(list));
+
+        list.insertAt(3, toList(7, 8, 9));
+        assertArrayEquals(new int[] { -1, 0, 1, 7, 8, 9, 2, 3 }, robustToArray(list));
+    }
+
+    @Test // 1
+    public void testInsertAtConsistent() throws Exception {
+        LinkedIntList list = new LinkedIntList();
+
+        insertAndCheck(list, 0, new LinkedIntList());
+        assertArrayEquals(new int[] {}, robustToArray(list));
+
+        insertAndCheck(list, 0, toList(1));
+        assertArrayEquals(new int[] { 1 }, robustToArray(list));
+
+        insertAndCheck(list, 0, new LinkedIntList());
+        assertArrayEquals(new int[] { 1 }, robustToArray(list));
+        insertAndCheck(list, 1, new LinkedIntList());
+        assertArrayEquals(new int[] { 1 }, robustToArray(list));
+
+        insertAndCheck(list, 1, toList(2, 3));
+        assertArrayEquals(new int[] { 1, 2, 3 }, robustToArray(list));
+
+        insertAndCheck(list, 0, toList(-1, 0));
+        assertArrayEquals(new int[] { -1, 0, 1, 2, 3 }, robustToArray(list));
+
+        insertAndCheck(list, 3, toList(7, 8, 9));
+        assertArrayEquals(new int[] { -1, 0, 1, 7, 8, 9, 2, 3 }, robustToArray(list));
+    }
+    
+    @Test // 0.5
+    public void testInsertAtSameInstance() throws Exception {
+        RuntimeException caught = null;
+        try {
+            LinkedIntList list = new LinkedIntList();
+            list.insertAt(0, list);
+        } catch (RuntimeException e) {
+            caught = e;
+        }
+        assertNotNull(caught);
+    }
+    
+    @Test // 0.5
+    public void testInsertAtSameInstanceMessage() throws Exception {
+        RuntimeException caught = null;
+        try {
+            LinkedIntList list = new LinkedIntList();
+            list.insertAt(0, list);
+        } catch (RuntimeException e) {
+            caught = e;
+        }
+        assertNotNull(caught);
+        assertEquals("cannot insert list into itself", caught.getMessage().toLowerCase());
+    }
+	
+	@Test // 0.5
+	public void testInsertNull() throws Exception {
+		LinkedIntList list = toList(4, 2);
+		list.insertAt(0, null);
+		assertArrayEquals(new int[] {4, 2}, robustToArray(list));
+		assertConsistency(list);
+	}
+    
+    @Test // 0.5
+    public void testInsertAtIllegalPosition() throws Exception {
+        RuntimeException caught = null;
+        try {
+            LinkedIntList list = new LinkedIntList();
+            list.addLast(4);
+            list.addLast(2);
+            
+            list.insertAt(-1, null);
+        } catch (RuntimeException e) {
+            caught = e;
+        }
+        assertNotNull(caught);
+        
+        caught = null;
+        try {
+            LinkedIntList list = new LinkedIntList();
+            list.addLast(4);
+            list.addLast(2);
+            
+            list.insertAt(3, null);
+        } catch (RuntimeException e) {
+            caught = e;
+        }
+        assertNotNull(caught);
+    }
+    
+    @Test // 0.5
+    public void testInsertAtIllegalPositionMessage() throws Exception {
+        RuntimeException caught = null;
+        try {
+            LinkedIntList list = new LinkedIntList();
+            list.addLast(4);
+            list.addLast(2);
+            
+            list.insertAt(-1, null);
+        } catch (RuntimeException e) {
+            caught = e;
+        }
+        assertNotNull(caught);
+        assertEquals("index out of bounds: -1", caught.getMessage().toLowerCase());
+        
+        caught = null;
+        try {
+            LinkedIntList list = new LinkedIntList();
+            list.addLast(4);
+            list.addLast(2);
+            
+            list.insertAt(3, null);
+        } catch (RuntimeException e) {
+            caught = e;
+        }
+        assertNotNull(caught);
+        assertEquals("index out of bounds: 3", caught.getMessage().toLowerCase());
+    }
+	
+	private void insertAndCheck(LinkedIntList list, int position, LinkedIntList other) throws Exception {
+		int[] copy = robustToArray(other);
+		list.insertAt(position, other);
+		assertArrayEquals(copy, robustToArray(other));
+		assertConsistency(list);
+		assertConsistency(other);
+	}
+
+    private int[] robustToArray(LinkedIntList list) {
+        int size = 0;
+        for (IntNode n = list.first; n != null; n = n.next)
+            size++;
+        
+        int[] array = new int[size];
+        int i = 0;
+        for (IntNode n = list.first; n != null; n = n.next, i++)
+            array[i] = n.value;
+        return array;
+    }
+}

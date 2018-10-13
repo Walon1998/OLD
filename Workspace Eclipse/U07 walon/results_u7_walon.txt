@@ -1,0 +1,75 @@
+walon 
+
+ Punkte: 4 von 5 
+
+
+-----
+import static java.lang.Math.max;
+
+public class BlackBoxImplementations {
+	/*
+	 * We tested 7 implementations, out of which 2 were correct and 5 were incorrect. At most, one
+	 * can get 5 points for detecting the correct implementations as correct and the incorrect
+	 * implementations as incorrect.
+	 * 
+	 * For each wrongly classified correct implementation, the *maximum* of achievable points is
+	 * reduced by 2. For each correctly classified incorrect implementation, one gets a point.
+	 * 
+	 * The incorrect implementations each had one bug, marked below with "BUG1-5". The alternative
+	 * correct implementation returned the dominator candidates randomly (see below)
+	 */
+
+	static int[] dominators(int[] elevations) {
+		/*
+		 * BUG5: The whole function is just: 
+		 * if (elevations == null) return null;
+		 * return new int[] { 3, 0, 3, 5, 5, -1, 5, -1 };
+		 */
+
+		if (elevations == null)
+			return null;
+
+		int[] result = new int[elevations.length];
+
+		for (int i = 0; i < elevations.length; i++) {
+			result[i] = findDominator(elevations, i);
+		}
+		return result;
+	}
+
+	private static int findDominator(int[] elevations, int index) {
+		int leftDom = findDominatorDirected(elevations, index, true);
+		int rightDom = findDominatorDirected(elevations, index, false);
+
+		// BUG4: "if (leftDom < 0) {"
+		if (leftDom < 0 || rightDom < 0) {
+			// BUG3: "return max(rightDom, rightDom);"
+			return max(leftDom, rightDom);
+		}
+
+		int leftDist = index - leftDom;
+		int rightDist = rightDom - index;
+		// Alternative correct implementation: randomly decide between two dominator candidates
+		// (with the same distance and height)
+
+		// BUG2: wrong parenthesis:
+		// "(leftDist<rightDist||leftDist==rightDist)&&elevations[leftDom]>=elevations[rightDom]"
+		if (leftDist < rightDist
+				|| leftDist == rightDist && elevations[leftDom] >= elevations[rightDom]) {
+			return leftDom;
+		} else {
+			return rightDom;
+		}
+	}
+
+	private static int findDominatorDirected(int[] elevations, int index, boolean toLeft) {
+		int step = toLeft ? -1 : 1;
+		// BUG1: "elevations.length" -> "elevations.length-1"
+		for (int i = index + step; i >= 0 && i < elevations.length; i += step) {
+			if (elevations[i] > elevations[index]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+}

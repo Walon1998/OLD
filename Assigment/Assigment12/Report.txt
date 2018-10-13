@@ -1,0 +1,22 @@
+Exercise 1 – Wait-free implies lock free
+
+locks implies not wait-free
+
+Exercise 2 – Valence states
+
+Only finite number of combinations.
+I didn't really understand the question.
+
+
+Exercise 3 – Consensus among prisoners
+
+If a prisoner comes the first time, he turn the light on. If he comes another time, he leaves the light at the state.
+There's only on prisoner who is allowed to turn the light off, and he counts how many times he could turn the light off.
+After 99 times and himself he can say it.
+
+
+1 Exercise 4 – Implementing two thread consensus
+
+Make an Array of size two.
+And write the threads value in it's place in the array.
+Now call TAS, if it returns 1 you were first and can your own number, otherwise it returns 0, you were last and have to take the number from the other thread.
